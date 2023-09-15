@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 public class Limb : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class Limb : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
+        
         if (collision.gameObject.CompareTag("Weapon"))
             Hit(collision.gameObject);
     }

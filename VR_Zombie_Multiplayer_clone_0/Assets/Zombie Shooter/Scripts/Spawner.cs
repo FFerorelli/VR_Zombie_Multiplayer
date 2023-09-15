@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class Spawner : MonoBehaviour
+public class Spawner : NetworkBehaviour
 {
     public float spawnTime = 1;
     public GameObject spawnGameObject;
@@ -12,10 +13,15 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsServer)
+            return;
+
         if(timer > spawnTime)
         {
             Transform randomPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            Instantiate(spawnGameObject, randomPoint.position, randomPoint.rotation);
+            GameObject spawnedZombie = Instantiate(spawnGameObject, randomPoint.position, randomPoint.rotation);
+            spawnedZombie.GetComponent<NetworkObject>().Spawn(true);
+
             timer = 0;
         }
 

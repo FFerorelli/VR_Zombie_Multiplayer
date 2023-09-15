@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
-public class Zombie : MonoBehaviour
+public class Zombie : NetworkBehaviour
 {
     public float minSpeed = 1f;
     public float maxSpeed = 4;
@@ -18,7 +19,18 @@ public class Zombie : MonoBehaviour
     {
         rbs = GetComponentsInChildren<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        target = FindObjectOfType<XROrigin>().transform;
+
+        if (IsServer)
+        {
+            NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
+
+            target = players[Random.Range(0, players.Length)].root;
+        }
+        else
+        {
+            agent.enabled = false;
+        }
+
 
         DisactivateRagdoll();
     }
@@ -26,22 +38,33 @@ public class Zombie : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(target.position);
+        if (IsServer)
+        {
+            agent.SetDestination(target.position);
 
-        if (Vector3.Distance(target.position, transform.position) < 1.5f)
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+            if (Vector3.Distance(target.position, transform.position) < 1.5f)
+                NetworkSceneTransition.Instance.LoadSceneForEverybody("Zombie");
+        }
+
     }
 
     public void Death()
     {
+        DeathClientRPC();
+
+        Destroy(gameObject, 10);
+    }
+
+    [ClientRpc]
+    public void DeathClientRPC()
+    {
         ActivateRagdoll();
         agent.enabled = false;
         GetComponent<Animator>().enabled = false;
-        AudioSource audioS= GetComponent<AudioSource>();
+        AudioSource audioS = GetComponent<AudioSource>();
         audioS.loop = false;
         audioS.PlayOneShot(deathAudio);
 
-        Destroy(gameObject, 10);
         Destroy(this);
     }
 
