@@ -16,6 +16,8 @@ public class LobbyManager : MonoBehaviour
 
     public UnityEvent OnStartJoinLobby;
     public UnityEvent OnFailedJoinLobby;
+    public UnityEvent OnFinishJoinLobby;
+    public UnityEvent OnLeaveLobby;
 
     private bool hasPlayerDataToUpdate = false;
     private Dictionary<string, PlayerDataObject> newPlayerData;
@@ -25,6 +27,18 @@ public class LobbyManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        OnFinishJoinLobby.AddListener(JoinVivoxChannel);
+        OnLeaveLobby.AddListener(LeaveVivoxChannel);
+    }
+
+    public void JoinVivoxChannel()
+    {
+        VivoxVoiceManager.Instance.JoinChannel(currentLobby.Id, VivoxUnity.ChannelType.NonPositional, VivoxVoiceManager.ChatCapability.AudioOnly);
+    }
+    public void LeaveVivoxChannel()
+    {
+        VivoxVoiceManager.Instance.DisconnectAllChannels();
     }
 
     public struct LobbyData
@@ -58,6 +72,8 @@ public class LobbyManager : MonoBehaviour
             string id = currentLobby.Id;
             currentLobby = null;
             await Lobbies.Instance.RemovePlayerAsync(id, AuthenticationService.Instance.PlayerId);
+
+            OnLeaveLobby.Invoke();
         }
     }
 
@@ -86,6 +102,8 @@ public class LobbyManager : MonoBehaviour
             lobbyOptions.Data.Add("Game Mode", gameDataObject);
 
             currentLobby = await Lobbies.Instance.CreateLobbyAsync(lobbyData.lobbyName, lobbyData.maxPlayer, lobbyOptions);
+
+            OnFinishJoinLobby.Invoke();
         }
         catch(System.Exception e)
         {
@@ -104,6 +122,8 @@ public class LobbyManager : MonoBehaviour
             string relayJoinCode = currentLobby.Data["Join Code Key"].Value;
 
             RelayManager.Instance.JoinRelayGame(relayJoinCode);
+
+            OnFinishJoinLobby.Invoke();
         }
         catch (System.Exception e)
         {
@@ -122,6 +142,8 @@ public class LobbyManager : MonoBehaviour
             string relayJoinCode = currentLobby.Data["Join Code Key"].Value;
 
             RelayManager.Instance.JoinRelayGame(relayJoinCode);
+
+            OnFinishJoinLobby.Invoke();
         }
         catch (System.Exception e)
         {

@@ -8920,6 +8920,7 @@ GameObject:
   - component: {fileID: 1989143598}
   - component: {fileID: 1989143599}
   - component: {fileID: 1989143600}
+  - component: {fileID: 1989143601}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -9058,6 +9059,28 @@ MonoBehaviour:
   OnFailedJoinLobby:
     m_PersistentCalls:
       m_Calls: []
+  OnFinishJoinLobby:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLeaveLobby:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1989143601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989143594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ccec6cc900e83f41aade135fe997e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _key: 
+  _issuer: 
+  _domain: 
+  _server: 
 --- !u!1 &2018700513
 GameObject:
   m_ObjectHideFlags: 0

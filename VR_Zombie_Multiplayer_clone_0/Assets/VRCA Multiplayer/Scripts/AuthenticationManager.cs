@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using Unity.Services.Vivox;
 
 #if UNITY_EDITOR
 using ParrelSync;
@@ -31,5 +32,7 @@ public class AuthenticationManager : MonoBehaviour
 
         await UnityServices.InitializeAsync(options);
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        VivoxService.Instance.Initialize();
+        VivoxVoiceManager.Instance.Login();
     }
 }
