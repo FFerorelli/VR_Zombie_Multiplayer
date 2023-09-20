@@ -4533,6 +4533,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie Intro Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 1345280674518667359, guid: 05668d1e67fd5054d99264a1ec85d989,
+        type: 3}
+      propertyPath: m_text
+      value: Zombie Demo
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05668d1e67fd5054d99264a1ec85d989, type: 3}
 --- !u!1 &1167254031

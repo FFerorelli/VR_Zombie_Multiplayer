@@ -35,7 +35,7 @@ public class SetOwnershipOnSelect : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UngrabServerRpc()
     {
-        isNetworkGrabbed.Value = true;
+        isNetworkGrabbed.Value = false;
     }
 
     // ( Called by the Client )
